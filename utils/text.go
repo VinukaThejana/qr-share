@@ -11,13 +11,13 @@ type Text struct{}
 
 // Style is a struct that contains the styling properties
 type Style struct {
-	Bold    bool
 	Color   lipgloss.TerminalColor
 	Padding struct {
 		Left int
 		Top  int
 	}
 	Align lipgloss.Position
+	Bold  bool
 }
 
 // H heading
