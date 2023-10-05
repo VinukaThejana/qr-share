@@ -37,6 +37,20 @@ func getPort(l net.Listener) int {
 	return l.Addr().(*net.TCPAddr).Port
 }
 
+func quit() {
+	for {
+		_, key, err := keyboard.GetKey()
+		if err != nil {
+			utils.Text{}.Error(err.Error())
+			os.Exit(1)
+		}
+
+		if key == keyboard.KeyEsc || key == keyboard.KeyCtrlC {
+			break
+		}
+	}
+}
+
 // ServeFile is a function that is used to serve the file
 func ServeFile(filename string) {
 }
@@ -112,17 +126,7 @@ func ServeDir(dir string) {
 		_ = keyboard.Close()
 	}()
 
-	for {
-		_, key, err := keyboard.GetKey()
-		if err != nil {
-			utils.Text{}.Error(err.Error())
-			os.Exit(1)
-		}
-
-		if key == keyboard.KeyEsc || key == keyboard.KeyCtrlC {
-			break
-		}
-	}
+	quit()
 
 	os.Exit(0)
 	wg.Wait()
