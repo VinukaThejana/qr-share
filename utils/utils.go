@@ -4,7 +4,6 @@ package utils
 import (
 	"fmt"
 	"net"
-	"net/url"
 	"os"
 	"os/user"
 	"path/filepath"
@@ -57,7 +56,7 @@ func GetDirAndFile(filePath string) (dir string, filename string, err error) {
 	if len(data) == 0 {
 		return "", "", fmt.Errorf("unexpected error")
 	}
-	filename = url.QueryEscape(data[len(data)-1])
+	filename = strings.ReplaceAll(data[len(data)-1], " ", "%20")
 
 	for i, value := range data {
 		if i == len(data)-1 || i == 0 {
