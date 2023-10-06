@@ -24,15 +24,6 @@ func listner() (l net.Listener, close func()) {
 	}
 }
 
-func check(fileOrDir string) bool {
-	if _, err := os.Stat(fileOrDir); err != nil {
-		utils.Text{}.Error(err.Error())
-		return false
-	}
-
-	return true
-}
-
 func getPort(l net.Listener) int {
 	return l.Addr().(*net.TCPAddr).Port
 }
@@ -51,20 +42,15 @@ func quit() {
 	}
 }
 
-// ServeFile is a function that is used to serve the file
-func ServeFile(filename string) {
-	if !check(filename) {
-		return
-	}
-}
-
-// ServeDir is a function that is used to serve the directory
-func ServeDir(dir string) {
+// Serve is a function that is used to serve the file or the directory
+func Serve(path string) {
 	var wg sync.WaitGroup
 
 	wg.Add(1)
 	go func() {
-		if !check(dir) {
+		dir, filename, err := utils.GetDirAndFile(path)
+		if err != nil {
+			utils.Text{}.Error(err.Error())
 			return
 		}
 
@@ -80,7 +66,12 @@ func ServeDir(dir string) {
 		fs := http.FileServer(http.Dir(dir))
 		http.Handle("/", fs)
 
-		url := fmt.Sprintf("http://%s:%d/", ip.String(), getPort(l))
+		var url string
+		if filename != "" {
+			url = fmt.Sprintf("http://%s:%d/%s", ip.String(), getPort(l), filename)
+		} else {
+			url = fmt.Sprintf("http://%s:%d/", ip.String(), getPort(l))
+		}
 
 		fmt.Println(utils.Text{}.H(utils.Style{
 			Color: lipgloss.Color("#ffffff"),
