@@ -1,10 +1,9 @@
 package cmd
 
 import (
-	"fmt"
 	"os"
 
-	"github.com/VinukaThejana/qr-share/utils"
+	"github.com/VinukaThejana/qr-share/controller"
 	"github.com/spf13/cobra"
 )
 
@@ -27,18 +26,11 @@ CORE COMMANDS
     serve the contents of the custom path over the local network
 `,
 	Run: func(_ *cobra.Command, args []string) {
-		var path string
 		if len(args) == 0 {
-			path = "./"
+			controller.Serve("./")
 		} else {
-			path = args[0]
-			if _, err := os.Stat(path); err != nil {
-				utils.Text{}.Error(fmt.Sprintf("%s : filename is not valid\n", path))
-				return
-			}
+			controller.Serve(args[0])
 		}
-
-		fmt.Println(path)
 	},
 }
 
