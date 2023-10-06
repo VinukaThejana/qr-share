@@ -53,6 +53,9 @@ func quit() {
 
 // ServeFile is a function that is used to serve the file
 func ServeFile(filename string) {
+	if !check(filename) {
+		return
+	}
 }
 
 // ServeDir is a function that is used to serve the directory
